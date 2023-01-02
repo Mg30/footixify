@@ -10,7 +10,7 @@ permissions:
   contents: write
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       # https://github.com/actions/checkout
@@ -26,7 +26,7 @@ jobs:
 
       - name: Build
         run: |
-          npm ci
+          npm install --force
           npm run build
           npm run export
           touch out/.nojekyll
@@ -38,8 +38,7 @@ jobs:
           DB_PORT: ${{secrets.DB_PORT}}
 
       - name: Deploy
-
-        uses: JamesIves/github-pages-deploy-action@4
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: out
