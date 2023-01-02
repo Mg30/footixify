@@ -11,8 +11,12 @@ export default function MyNavbar() {
             <Row>
                 <Navbar>
                     <Container>
-                        <Navbar.Brand> FOOTiFY</Navbar.Brand>
-                        <Nav className='me-auto'>
+                        <Navbar.Brand> FooTixfy</Navbar.Brand>
+                        SOCCER PREDICTIONS
+                        <Nav>
+                            <Nav.Link href='/'>
+                                Home
+                            </Nav.Link>
                             <Nav.Link href='/predictions'>
                                 Predictions
                             </Nav.Link>
