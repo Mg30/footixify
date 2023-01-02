@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,8 +38,8 @@ jobs:
           DB_PORT: ${{secrets.DB_PORT}}
 
       - name: Deploy
-        # https://github.com/JamesIves/github-pages-deploy-action
-        uses: JamesIves/github-pages-deploy-action@4.4.0
+
+        uses: JamesIves/github-pages-deploy-action@4
         with:
           branch: gh-pages
           folder: out
