@@ -10,10 +10,15 @@
   },
   "dependencies": {
     "@next/font": "13.1.1",
+    "bootstrap": "^5.2.3",
     "eslint": "8.31.0",
-    "eslint-config-next": "13.1.1",
+    "eslint-config-next": "^12.0.4",
     "next": "13.1.1",
+    "pg": "^8.8.0",
     "react": "18.2.0",
+    "react-bootstrap": "^2.7.0",
+    "react-bootstrap-table-next": "^4.0.3",
+    "react-bootstrap-table2-paginator": "^2.1.2",
     "react-dom": "18.2.0"
   }
 }
