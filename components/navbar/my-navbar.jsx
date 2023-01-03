@@ -3,7 +3,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
-
+import Link from 'next/link'
 
 export default function MyNavbar() {
     return (
@@ -11,18 +11,22 @@ export default function MyNavbar() {
             <Row>
                 <Navbar>
                     <Container>
-                        <Navbar.Brand> FooTixify</Navbar.Brand>
+                        <Navbar.Brand>FooTixiFy</Navbar.Brand>
                         SOCCER PREDICTIONS
                         <Nav>
-                            <Nav.Link href='/'>
-                                Home
-                            </Nav.Link>
-                            <Nav.Link href='/predictions'>
-                                Predictions
-                            </Nav.Link>
-                            <Nav.Link href='/results'>
-                                Results
-                            </Nav.Link>
+                            <Nav.Item>
+                                <Link href="/">Home</Link>
+                            </Nav.Item>
+                        </Nav>
+                        <Nav>
+                            <Nav.Item>
+                                <Link href="/predictions">Today Predictions</Link>
+                            </Nav.Item>
+                        </Nav>
+                        <Nav>
+                            <Nav.Item>
+                                <Link href="/results">Historics Results</Link>
+                            </Nav.Item>
                         </Nav>
                     </Container>
                 </Navbar>
