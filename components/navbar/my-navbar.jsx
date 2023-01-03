@@ -11,7 +11,7 @@ export default function MyNavbar() {
             <Row>
                 <Navbar>
                     <Container>
-                        <Navbar.Brand> FooTixfy</Navbar.Brand>
+                        <Navbar.Brand> FooTixify</Navbar.Brand>
                         SOCCER PREDICTIONS
                         <Nav>
                             <Nav.Link href='/'>
