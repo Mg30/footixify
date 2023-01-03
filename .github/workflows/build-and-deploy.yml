@@ -28,7 +28,6 @@ jobs:
         run: |
           npm install --force
           npm run build
-          npm run export
           touch out/.nojekyll
         env:
           DB_HOST: ${{secrets.DB_HOST}}
