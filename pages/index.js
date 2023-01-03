@@ -15,12 +15,43 @@ export default function Home({ profits }) {
     yAxis: {},
     series: [
       {
+        name: 'cumulative profit',
         type: 'line',
         encode: {
           x: "matchDate",
           y: "cumulative_profit"
         }
 
+      },
+      {
+        name: 'profit',
+        type: 'bar',
+        encode: {
+          x: "matchDate",
+          y: "profit"
+        }
+
+      },
+    ],
+    visualMap: [
+      {
+        show: false,
+        min: 0,
+        max: 1,
+        seriesIndex: 1,
+        dimension: 3,
+        inRange: {
+          color: ['red', 'green']
+        },
+      },
+      {
+        show: false,
+        min: 0,
+        max: 1,
+        seriesIndex: 0,
+        inRange: {
+          color: ['red', 'green']
+        },
       },
     ],
     tooltip: {
@@ -35,11 +66,11 @@ export default function Home({ profits }) {
       <Row>
         <Card >
           <Card.Header>
-            <Card.Title>Cumulative profit of the Model</Card.Title>
+            <Card.Title>Model performance</Card.Title>
           </Card.Header>
           <Card.Body>
             <Card.Text>
-              The hypothesis taken here is to bet one euro on each matches.
+            ML bets only : 1€ bet on every match.
             </Card.Text>
             <ReactECharts option={options} />
           </Card.Body>
