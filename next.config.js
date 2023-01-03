@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   basePath: '/footixify',
+  assetPrefix:'/footixify/'
 }
 
 module.exports = nextConfig
