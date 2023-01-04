@@ -32,6 +32,11 @@ const columns = [
         text: "result",
         sort: true
     },
+    {
+        dataField: "winnings",
+        text: "winnings",
+        sort: true
+    },
 
 ]
 
