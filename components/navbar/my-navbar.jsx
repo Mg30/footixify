@@ -3,7 +3,6 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 export default function MyNavbar() {
