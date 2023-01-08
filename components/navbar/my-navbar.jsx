@@ -13,7 +13,7 @@ export default function MyNavbar() {
                 <Navbar>
                     <Container>
                         <Navbar.Brand>FooTixiFy</Navbar.Brand>
-                        SOCCER PREDICTIONS
+                         SOCCER PREDICTIONS
                         <Nav>
                             <Nav.Link onClick={() => router.push('/')}>
                                 Home
