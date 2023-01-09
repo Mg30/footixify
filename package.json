@@ -9,8 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.3",
+    "@mui/x-data-grid": "^5.17.18",
     "@next/font": "13.1.1",
-    "bootstrap": "^5.2.3",
     "echarts": "^5.4.1",
     "echarts-for-react": "^3.0.2",
     "eslint": "8.31.0",
@@ -18,9 +23,6 @@
     "next": "13.1.1",
     "pg": "^8.8.0",
     "react": "18.2.0",
-    "react-bootstrap": "^2.7.0",
-    "react-bootstrap-table-next": "^4.0.3",
-    "react-bootstrap-table2-paginator": "^2.1.2",
     "react-dom": "18.2.0"
   }
 }

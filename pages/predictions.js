@@ -1,47 +1,55 @@
 
-import Container from 'react-bootstrap/Container';
 import NavBar from '../components/navbar/my-navbar'
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import pgFactory from '../database/pg'
+import { Box } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
+import React from 'react';
 const columns = [
     {
-        dataField: "matchDate",
-        text: "date",
-        sort: true
+        field: "matchDate",
+        headerName: "date",
+        sortable: true,
+        flex: 1,
     },
     {
-        dataField: "homeTeamName",
-        text: "home team",
-        sort: true
+        field: "homeTeamName",
+        headerName: "home team",
+        sortable: false,
+        flex: 1,
     },
     {
-        dataField: "awayTeamName",
-        text: "away team",
-        sort: true
+        field: "awayTeamName",
+        headerName: "away team",
+        sortable: false,
+        flex: 1,
     },
     {
-        dataField: "preds",
-        text: "predictions",
-        sort: true
+        field: "preds",
+        headerName: "predictions",
+        sortable: true,
+        flex: 1,
     },
 
 ]
 function Predictions({ predictions }) {
 
     return (
-        <Container>
-            <NavBar>
-            </NavBar>
-            <BootstrapTable
-            title= "Upcomming Matches"
-                keyField="id"
-                data={predictions}
-                columns={columns}
-                pagination={paginationFactory({ sizePerPage: 15 })}
-            />
+        <React.Fragment>
+            <NavBar></NavBar>
 
-        </Container>
+            <div style={{ height: 400, width: '100%' }}>
+                <div style={{ display: 'flex', height: '100%' }}>
+                    <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                            rows={predictions}
+                            columns={columns}
+                            pageSize={10}
+                            autoHeight
+                        />
+                    </div>
+                </div>
+            </div>
+        </React.Fragment>
 
     )
 }
