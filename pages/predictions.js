@@ -1,9 +1,9 @@
 
 import NavBar from '../components/navbar/my-navbar'
 import pgFactory from '../database/pg'
-import { Box } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
+import Footer from '../components/footers/my-footer'
 const columns = [
     {
         field: "matchDate",
@@ -49,6 +49,8 @@ function Predictions({ predictions }) {
                     </div>
                 </div>
             </div>
+
+            <Footer></Footer>
         </React.Fragment>
 
     )

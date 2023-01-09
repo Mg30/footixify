@@ -1,41 +1,46 @@
 import NavBar from '../components/navbar/my-navbar'
-import { Container } from 'react-bootstrap'
-import BootstrapTable from "react-bootstrap-table-next";
-import paginationFactory from "react-bootstrap-table2-paginator";
 import pgFactory from '../database/pg'
-
+import { DataGrid } from '@mui/x-data-grid';
+import React from 'react';
+import Footer from '../components/footers/my-footer'
 
 const columns = [
     {
-        dataField: "matchDate",
-        text: "date",
-        sort: true
+        field: "matchDate",
+        headerName: "date",
+        sortable: true,
+        flex: 1,
     },
     {
-        dataField: "homeTeamName",
-        text: "home team",
-        sort: true
+        field: "homeTeamName",
+        headerName: "home team",
+        sortable: false,
+        flex: 1
     },
     {
-        dataField: "awayTeamName",
-        text: "away team",
-        sort: true
+        field: "awayTeamName",
+        headerName: "away team",
+        sortable: false,
+        flex: 1
     },
 
     {
-        dataField: "prediction",
-        text: "predictions",
-        sort: true
+        field: "prediction",
+        headerName: "predictions",
+        sortable: true,
+        flex: 1
     },
     {
-        dataField: "result",
-        text: "result",
-        sort: true
+        field: "result",
+        headerName: "result",
+        sortable: true,
+        flex: 1
     },
     {
-        dataField: "winnings",
-        text: "winnings",
-        sort: true
+        field: "winnings",
+        headerName: "winnings",
+        sortable: false,
+        flex: 1
     },
 
 ]
@@ -43,17 +48,24 @@ const columns = [
 
 function Results({ results }) {
     return (
-        <Container>
-            <NavBar>
-            </NavBar>
-            <BootstrapTable
-                bootstrap4
-                keyField="id"
-                data={results}
-                columns={columns}
-                pagination={paginationFactory({ sizePerPage: 15 })}
-            />
-        </Container>
+        <React.Fragment>
+            <NavBar></NavBar>
+
+            <div style={{ height: 400, width: '100%' }}>
+                <div style={{ display: 'flex', height: '100%' }}>
+                    <div style={{ flexGrow: 1 }}>
+                        <DataGrid
+                            rows={results}
+                            columns={columns}
+                            pageSize={10}
+                            autoHeight
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <Footer></Footer>
+        </React.Fragment>
     )
 }
 
