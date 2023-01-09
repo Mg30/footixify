@@ -1,5 +1,7 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
-import "react-bootstrap-table-next/dist/react-bootstrap-table2.min.css";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
 
 export default function App({ Component, pageProps }) {
   return <Component {...pageProps} />
