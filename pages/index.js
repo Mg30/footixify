@@ -1,8 +1,9 @@
 import NavBar from '../components/navbar/my-navbar'
-import { Container, Card, Row } from 'react-bootstrap'
+import Footer from '../components/footers/my-footer'
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
 import pgFactory from '../database/pg'
+import { Grid, CardHeader, Card, CardContent, Typography, Paper } from '@mui/material';
 
 export default function Home({ profits }) {
   const options = {
@@ -60,24 +61,28 @@ export default function Home({ profits }) {
   };
 
   return (
-    <Container>
-      <NavBar>
-      </NavBar>
-      <Row>
-        <Card >
-          <Card.Header>
-            <Card.Title>Model performance</Card.Title>
-          </Card.Header>
-          <Card.Body>
-            <Card.Text>
-            ML bets only : 1€ bet on every match.
-            </Card.Text>
-            <ReactECharts option={options} />
-          </Card.Body>
-        </Card>
-      </Row>
+    <React.Fragment>
+      <NavBar></NavBar>
+      <Grid container>
+        <Grid xs={12}>
+          <Card elevation={0} sx={{ minWidth: 275 }}>
+            <CardHeader title="Model Performance" subheader="From start of the season for the top 5 EU league (Premier League , Liga, Serie A, Bundesliga, Ligue 1).">
+            </CardHeader>
+            <CardContent>
+              <ReactECharts option={options} />
 
-    </Container>
+              <Typography variant="body2" color="text.secondary">
+                Assumptions : 1€ bet on every predictions.
+              </Typography>
+            </CardContent>
+
+          </Card>
+        </Grid>
+      </Grid>
+      <Footer></Footer>
+
+    </React.Fragment>
+
   )
 }
 
