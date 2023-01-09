@@ -1,37 +1,33 @@
 import React from 'react'
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row'
 import { useRouter } from 'next/router'
-
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Button, Box } from '@mui/material';
 export default function MyNavbar() {
     const router = useRouter()
     return (
-        <Container>
-            <Row>
-                <Navbar>
-                    <Container>
-                        <Navbar.Brand>FooTixiFy</Navbar.Brand>
-                        SOCCER PREDICTIONS
-                        <Nav>
-                            <Nav.Link onClick={() => router.push('/')}>
-                                Home
-                            </Nav.Link>
-                        </Nav>
-                        <Nav>
-                            <Nav.Link onClick={() => router.push('/predictions')}>
-                                Upcomming matches Predictions
-                            </Nav.Link>
-                        </Nav>
-                        <Nav>
-                            <Nav.Link onClick={() => router.push('/results')}>
-                                Prediction History
-                            </Nav.Link>
-                        </Nav>
-                    </Container>
-                </Navbar>
-            </Row>
-        </Container>
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        onClick={() => router.push('/')}
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        FooTixiFy
+                    </Typography>
+                    <Button color="inherit" onClick={() => router.push('/predictions')} >Upcoming matches predictions</Button>
+                    <Button color="inherit" onClick={() => router.push('/results')}>Predictions History</Button>
+                </Toolbar>
+            </AppBar>
+        </Box>
     )
 }
