@@ -16,6 +16,7 @@
     "@mui/material": "^5.11.3",
     "@mui/x-data-grid": "^5.17.18",
     "@next/font": "13.1.1",
+    "duckdb": "^0.8.1",
     "echarts": "^5.4.1",
     "echarts-for-react": "^3.0.2",
     "eslint": "8.31.0",
