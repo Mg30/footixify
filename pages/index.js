@@ -1,15 +1,17 @@
-import NavBar from '../components/navbar/my-navbar'
-import Footer from '../components/footers/my-footer'
-import React from 'react';
+import React, { useState } from 'react';
 import ReactECharts from 'echarts-for-react';
-import pgFactory from '../database/pg'
-import { Grid, CardHeader, Card, CardContent, Typography, Paper } from '@mui/material';
+import { Grid, CardHeader, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
+import { duckdbFactory } from '../database/duckdb'
 
-export default function Home({ profits }) {
+export default function Home({ profits, profitsAllLeague }) {
+  const data = JSON.parse(profits)
+  const dataAllLeagues = JSON.parse(profitsAllLeague)
+  const leagues = data.map(v => v.league)
+  const uniqueLeague = Array.from(new Set(leagues))
+  const [selectedLeague, setSelectedLeague] = useState('premier-league');
+
   const options = {
-    dataset: {
-      source: profits
-    },
+
     xAxis: {
       type: 'category'
     },
@@ -19,7 +21,7 @@ export default function Home({ profits }) {
         name: 'cumulative profit',
         type: 'line',
         encode: {
-          x: "matchDate",
+          x: "date",
           y: "cumulative_profit"
         }
 
@@ -28,7 +30,7 @@ export default function Home({ profits }) {
         name: 'profit',
         type: 'bar',
         encode: {
-          x: "matchDate",
+          x: "date",
           y: "profit"
         }
 
@@ -40,7 +42,7 @@ export default function Home({ profits }) {
         min: 0,
         max: 1,
         seriesIndex: 1,
-        dimension: 3,
+        dimension: 0,
         inRange: {
           color: ['red', 'green']
         },
@@ -60,26 +62,59 @@ export default function Home({ profits }) {
     },
   };
 
+
+  const filteredData = selectedLeague === '' ? data : data.filter(v => v.league === selectedLeague);
+
+  const perLeagues = {
+    dataset: {
+      source: filteredData
+    },
+    ...options
+  }
+
+  const allLeagues = {
+    dataset: {
+      source: dataAllLeagues
+    },
+    ...options
+  }
+
   return (
     <React.Fragment>
-      <NavBar></NavBar>
-      <Grid container>
-        <Grid xs={12}>
+      <Grid container direction="column" spacing={3}>
+        <Grid item>
           <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance" subheader="From start of the season for the top 5 EU league (Premier League , Liga, Serie A, Bundesliga, Ligue 1).">
+            <CardHeader title="Model Performance " subheader={`For : ${selectedLeague}  value bet only`}>
             </CardHeader>
             <CardContent>
-              <ReactECharts option={options} />
+              <Select
+                value={selectedLeague}
+                onChange={(e) => setSelectedLeague(e.target.value)}
+                displayEmpty
+                fullWidth
+              >
+                {uniqueLeague.map((league, idx) => (
+                  <MenuItem key={idx} value={league}>
+                    {league}
+                  </MenuItem>
+                ))}
+              </Select>
+              <ReactECharts option={perLeagues} />
+            </CardContent>
 
-              <Typography variant="body2" color="text.secondary">
-                Assumptions : 1€ bet on every predictions.
-              </Typography>
+          </Card>
+        </Grid>
+        <Grid item>
+          <Card elevation={0} sx={{ minWidth: 275 }}>
+            <CardHeader title="Model Performance" subheader={"For all leagues value bet only: " + uniqueLeague.join(" , ")}>
+            </CardHeader>
+            <CardContent>
+              <ReactECharts option={allLeagues} />
             </CardContent>
 
           </Card>
         </Grid>
       </Grid>
-      <Footer></Footer>
 
     </React.Fragment>
 
@@ -87,13 +122,42 @@ export default function Home({ profits }) {
 }
 
 export async function getStaticProps() {
-  const client = pgFactory()
-  await client.connect()
-  const { rows } = await client.query(`select * from expo_profits`)
-  await client.end()
+  const { execute } = await duckdbFactory()
+  const data = await execute(`
+  with group_date as (select
+  round(sum(gain),2) - count (*) as profit,
+  league,
+  date
+  from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
+  where was_value = 'true'
+  group by date, league)
+
+  select *, 
+  sum(profit) over (partition by league ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_profit
+  from group_date
+  order by date
+  `)
+
+
+  const allLeagues = await execute(`
+  with group_date as (select
+    round(sum(gain),2) - count (*) as profit,
+    date
+    from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
+    where was_value = 'true'
+    group by date
+    )
+  
+    select *, 
+    sum(profit) over (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_profit
+    from group_date
+    order by date
+  `)
+
   return {
     props: {
-      profits: rows,
+      profits: JSON.stringify(data),
+      profitsAllLeague: JSON.stringify(allLeagues)
     }
   }
 }
