@@ -1,31 +1,49 @@
 
-import NavBar from '../components/navbar/my-navbar'
-import pgFactory from '../database/pg'
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
-import Footer from '../components/footers/my-footer'
+
+import { duckdbFactory } from '../database/duckdb'
+
 const columns = [
     {
-        field: "matchDate",
+        field: "date",
         headerName: "date",
         sortable: true,
         flex: 1,
     },
     {
-        field: "homeTeamName",
+        field: "home_team",
         headerName: "home team",
         sortable: false,
         flex: 1,
     },
     {
-        field: "awayTeamName",
+        field: "away_team",
         headerName: "away team",
         sortable: false,
         flex: 1,
     },
     {
-        field: "preds",
-        headerName: "predictions",
+        field: "league",
+        headerName: "league",
+        sortable: true,
+        flex: 1,
+    },
+    {
+        field: "prediction",
+        headerName: "prediction",
+        sortable: true,
+        flex: 1,
+    },
+    {
+        field: "outcome_probability",
+        headerName: "outcome probability",
+        sortable: true,
+        flex: 1,
+    },
+    {
+        field: "is_value",
+        headerName: "value bet",
         sortable: true,
         flex: 1,
     },
@@ -34,36 +52,40 @@ const columns = [
 function Predictions({ predictions }) {
 
     return (
-        <React.Fragment>
-            <NavBar></NavBar>
 
-            <div style={{ height: 400, width: '100%' }}>
-                <div style={{ display: 'flex', height: '100%' }}>
-                    <div style={{ flexGrow: 1 }}>
-                        <DataGrid
-                            rows={predictions}
-                            columns={columns}
-                            pageSize={10}
-                            autoHeight
-                        />
-                    </div>
+        <div style={{ height: 400, width: '100%' }}>
+            <div style={{ display: 'flex', height: '100%' }}>
+                <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                        rows={JSON.parse(predictions)}
+                        columns={columns}
+                        pageSize={10}
+                        autoHeight
+                    />
                 </div>
             </div>
+        </div>
 
-            <Footer></Footer>
-        </React.Fragment>
 
     )
 }
 
 export async function getStaticProps() {
-    const client = pgFactory()
-    await client.connect()
-    const { rows } = await client.query(`select * from expo_preds`)
-    await client.end()
+    const { execute } = await duckdbFactory()
+    const data = await execute(`select *, 
+    row_number() OVER () as id,
+    strftime(date, '%d/%m/%Y') as date,
+    case 
+    when prediction = 'hw' then round(hw_proba,2)
+    when prediction = 'aw' then round(aw_proba,2)
+    when prediction = 'd' then round(d_proba,2)
+    end as outcome_probability
+    from read_parquet('s3://fbref-gold/predictions_history_latest_version/*.parquet')
+    where date >= current_date();
+    `)
     return {
         props: {
-            predictions: rows,
+            predictions: JSON.stringify(data),
         }
     }
 }
