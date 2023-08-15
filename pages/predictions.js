@@ -81,7 +81,8 @@ export async function getStaticProps() {
     when prediction = 'd' then round(d_proba,2)
     end as outcome_probability
     from read_parquet('s3://fbref-gold/predictions_history_latest_version/*.parquet')
-    where date >= current_date();
+    where date >= current_date()
+    order by date ASC;
     `)
     return {
         props: {
