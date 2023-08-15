@@ -1,24 +1,22 @@
-import NavBar from '../components/navbar/my-navbar'
-import pgFactory from '../database/pg'
 import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
-import Footer from '../components/footers/my-footer'
+import { duckdbFactory } from '../database/duckdb'
 
 const columns = [
     {
-        field: "matchDate",
+        field: "date",
         headerName: "date",
         sortable: true,
         flex: 1,
     },
     {
-        field: "homeTeamName",
+        field: "home_team",
         headerName: "home team",
         sortable: false,
         flex: 1
     },
     {
-        field: "awayTeamName",
+        field: "away_team",
         headerName: "away team",
         sortable: false,
         flex: 1
@@ -26,7 +24,7 @@ const columns = [
 
     {
         field: "prediction",
-        headerName: "predictions",
+        headerName: "prediction",
         sortable: true,
         flex: 1
     },
@@ -37,7 +35,7 @@ const columns = [
         flex: 1
     },
     {
-        field: "winnings",
+        field: "gain",
         headerName: "winnings",
         sortable: false,
         flex: 1
@@ -49,13 +47,12 @@ const columns = [
 function Results({ results }) {
     return (
         <React.Fragment>
-            <NavBar></NavBar>
 
             <div style={{ height: 400, width: '100%' }}>
                 <div style={{ display: 'flex', height: '100%' }}>
                     <div style={{ flexGrow: 1 }}>
                         <DataGrid
-                            rows={results}
+                            rows={JSON.parse(results)}
                             columns={columns}
                             pageSize={10}
                             autoHeight
@@ -63,20 +60,21 @@ function Results({ results }) {
                     </div>
                 </div>
             </div>
-
-            <Footer></Footer>
         </React.Fragment>
     )
 }
 
 export async function getStaticProps() {
-    const client = pgFactory()
-    await client.connect()
-    const { rows } = await client.query(`select * from expo_results`)
-    await client.end()
+    const { execute } = await duckdbFactory()
+    const data = await execute(`select *,
+    round(gain,2) as gain,
+    row_number() OVER () as id,
+    strftime(date, '%d/%m/%Y') as date
+    from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
+    `)
     return {
         props: {
-            results: rows,
+            results: JSON.stringify(data),
         }
     }
 }
