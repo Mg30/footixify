@@ -101,12 +101,14 @@ export default function Home({ profits, profitsAllLeague }) {
               </Select>
               <ReactECharts option={perLeagues} />
             </CardContent>
+            <Typography></Typography>
 
           </Card>
         </Grid>
         <Grid item>
           <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance" subheader={"For all leagues value bet only: " + uniqueLeague.join(" , ")}>
+            <CardHeader title="Model Performance" subheader="For top 5 EU leagues value bet only">
+
             </CardHeader>
             <CardContent>
               <ReactECharts option={allLeagues} />
@@ -144,7 +146,7 @@ export async function getStaticProps() {
     round(sum(gain),2) - count (*) as profit,
     date
     from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
-    where was_value = 'true'
+    where was_value = 'true' and league in ('liga','ligue-1','premier-league','bundesliga','serie-a')
     group by date
     )
   
