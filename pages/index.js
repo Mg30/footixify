@@ -84,7 +84,7 @@ export default function Home({ profits, profitsAllLeague }) {
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance " subheader={`For : ${selectedLeague}  value bet only`}>
+            <CardHeader title="Model Performance:" subheader={`For : ${selectedLeague}  value bet only`}>
             </CardHeader>
             <CardContent>
               <Select
