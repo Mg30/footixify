@@ -50,14 +50,18 @@ const columns = [
 
 ]
 function Predictions({ predictions }) {
-
+    const rows = JSON.parse(predictions)
+    rows.forEach(item => {
+        const [day, month, year] = item.date.split('/').map(Number);
+        item.date = new Date(year, month - 1, day);  // Note: month is 0-based in JavaScript
+    });
     return (
 
         <div style={{ height: 400, width: '100%' }}>
             <div style={{ display: 'flex', height: '100%' }}>
                 <div style={{ flexGrow: 1 }}>
                     <DataGrid
-                        rows={JSON.parse(predictions)}
+                        rows={rows}
                         columns={columns}
                         pageSize={10}
                         autoHeight

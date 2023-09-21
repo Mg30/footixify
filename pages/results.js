@@ -45,6 +45,11 @@ const columns = [
 
 
 function Results({ results }) {
+    const rows = JSON.parse(results)
+    rows.forEach(item => {
+        const [day, month, year] = item.date.split('/').map(Number);
+        item.date = new Date(year, month - 1, day);  // Note: month is 0-based in JavaScript
+    });
     return (
         <React.Fragment>
 
@@ -52,7 +57,7 @@ function Results({ results }) {
                 <div style={{ display: 'flex', height: '100%' }}>
                     <div style={{ flexGrow: 1 }}>
                         <DataGrid
-                            rows={JSON.parse(results)}
+                            rows={rows}
                             columns={columns}
                             pageSize={10}
                             autoHeight
