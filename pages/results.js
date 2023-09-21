@@ -21,7 +21,12 @@ const columns = [
         sortable: false,
         flex: 1
     },
-
+    {
+        field: "league",
+        headerName: "league",
+        sortable: true,
+        flex: 1,
+    },
     {
         field: "prediction",
         headerName: "prediction",
@@ -37,6 +42,12 @@ const columns = [
     {
         field: "gain",
         headerName: "winnings",
+        sortable: false,
+        flex: 1
+    },
+    {
+        field: "was_value",
+        headerName: "value bet",
         sortable: false,
         flex: 1
     },
