@@ -9,6 +9,7 @@ export default function Home({ profits, profitsAllLeague }) {
   const leagues = data.map(v => v.league)
   const uniqueLeague = Array.from(new Set(leagues))
   const [selectedLeague, setSelectedLeague] = useState('premier-league');
+  const [selectedPrediction, setSelectedPrediction] = useState('hw');
 
   const options = {
 
@@ -65,6 +66,9 @@ export default function Home({ profits, profitsAllLeague }) {
 
   const filteredData = selectedLeague === '' ? data : data.filter(v => v.league === selectedLeague);
 
+  const filteredPrediction = selectedPrediction === '' ? dataAllLeagues : dataAllLeagues.filter(v => v.prediction === selectedPrediction);
+
+
   const perLeagues = {
     dataset: {
       source: filteredData
@@ -74,7 +78,7 @@ export default function Home({ profits, profitsAllLeague }) {
 
   const allLeagues = {
     dataset: {
-      source: dataAllLeagues
+      source: filteredPrediction
     },
     ...options
   }
@@ -111,6 +115,18 @@ export default function Home({ profits, profitsAllLeague }) {
 
             </CardHeader>
             <CardContent>
+              <Select
+                value={selectedPrediction}
+                onChange={(e) => setSelectedPrediction(e.target.value)}
+                displayEmpty
+                fullWidth
+              >
+                {['hw', 'd', 'aw'].map((v, idx) => (
+                  <MenuItem key={idx} value={v}>
+                    {v}
+                  </MenuItem>
+                ))}
+              </Select>
               <ReactECharts option={allLeagues} />
             </CardContent>
 
@@ -144,14 +160,15 @@ export async function getStaticProps() {
   const allLeagues = await execute(`
   with group_date as (select
     round(sum(gain),2) - count (*) as profit,
-    date
+    date,
+    prediction
     from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
     where was_value = 'true' and league in ('liga','ligue-1','premier-league','bundesliga','serie-a')
-    group by date
+    group by date,prediction
     )
   
     select *, 
-    sum(profit) over (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_profit
+    sum(profit) over (partition by prediction ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_profit
     from group_date
     order by date
   `)
