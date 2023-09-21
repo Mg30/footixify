@@ -9,7 +9,7 @@ export default function Home({ profits, profitsAllLeague }) {
   const leagues = data.map(v => v.league)
   const uniqueLeague = Array.from(new Set(leagues))
   const [selectedLeague, setSelectedLeague] = useState('premier-league');
-  const [selectedPrediction, setSelectedPrediction] = useState('hw');
+  const [selectedPrediction, setSelectedPrediction] = useState('aw');
 
   const options = {
 
