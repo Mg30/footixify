@@ -3,11 +3,8 @@ import { Paper, Box, Container, Typography } from '@mui/material';
 export default function MyFooter() {
     return (
         <Paper sx={{
-            marginTop: 'calc(10% + 60px)',
-            width: '100%',
-            position: 'fixed',
-            bottom: 0,
-            width: '100%',
+            marginTop: 'auto', // Adjust as necessary
+            position: 'sticky', // Changed from 'fixed' to 'sticky'
         }} component="footer" square variant="outlined">
             <Container maxWidth="lg">
                 <Box
