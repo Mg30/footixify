@@ -111,7 +111,7 @@ export default function Home({ profits, profitsAllLeague }) {
         </Grid>
         <Grid item>
           <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance" subheader={`For top 5 EU leagues ${selectedPrediction} value bet only. Total matches predicted: ${filteredPrediction.length}`}>
+            <CardHeader title="Model Performance" subheader={`For top 5 EU leagues ${selectedPrediction} value bet only.`}>
             </CardHeader>
             <CardContent>
               <Select
@@ -146,7 +146,6 @@ export async function getStaticProps() {
   league,
   date
   from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
-  where was_value = 'true'
   group by date, league)
 
   select *, 
@@ -162,7 +161,6 @@ export async function getStaticProps() {
     date,
     prediction
     from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
-    where was_value = 'true' and league in ('liga','ligue-1','premier-league','bundesliga','serie-a')
     group by date,prediction
     )
   
