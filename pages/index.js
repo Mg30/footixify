@@ -3,9 +3,10 @@ import ReactECharts from 'echarts-for-react';
 import { Grid, CardHeader, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
 import { duckdbFactory } from '../database/duckdb'
 
-export default function Home({ profits, profitsAllLeague }) {
+export default function Home({ profits, profitsAllLeague, profitsPerPrediction }) {
   const data = JSON.parse(profits)
   const dataAllLeagues = JSON.parse(profitsAllLeague)
+  const dataPerPrediction = JSON.parse(profitsPerPrediction)
   const leagues = data.map(v => v.league)
   const uniqueLeague = Array.from(new Set(leagues))
   const [selectedLeague, setSelectedLeague] = useState('premier-league');
@@ -66,7 +67,7 @@ export default function Home({ profits, profitsAllLeague }) {
 
   const filteredData = selectedLeague === '' ? data : data.filter(v => v.league === selectedLeague);
 
-  const filteredPrediction = selectedPrediction === '' ? dataAllLeagues : dataAllLeagues.filter(v => v.prediction === selectedPrediction);
+  const filteredPrediction = selectedPrediction === '' ? dataPerPrediction : dataPerPrediction.filter(v => v.prediction === selectedPrediction);
 
 
   const perLeagues = {
@@ -76,9 +77,15 @@ export default function Home({ profits, profitsAllLeague }) {
     ...options
   }
 
-  const allLeagues = {
+  const perPrediction = {
     dataset: {
       source: filteredPrediction
+    },
+    ...options
+  }
+  const allLeagues = {
+    dataset: {
+      source: dataAllLeagues
     },
     ...options
   }
@@ -88,7 +95,7 @@ export default function Home({ profits, profitsAllLeague }) {
       <Grid container direction="column" spacing={3}>
         <Grid item>
           <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance:" subheader={`For : ${selectedLeague} value bet only`}>
+            <CardHeader title="Model Performance:" subheader={`For : ${selectedLeague}`}>
             </CardHeader>
             <CardContent>
               <Select
@@ -111,7 +118,7 @@ export default function Home({ profits, profitsAllLeague }) {
         </Grid>
         <Grid item>
           <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance" subheader={`${selectedPrediction} value bet only.`}>
+            <CardHeader title="Model Performance" subheader={`${selectedPrediction}`}>
             </CardHeader>
             <CardContent>
               <Select
@@ -126,14 +133,22 @@ export default function Home({ profits, profitsAllLeague }) {
                   </MenuItem>
                 ))}
               </Select>
+              <ReactECharts option={perPrediction} />
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item>
+          <Card elevation={0} sx={{ minWidth: 275 }}>
+            <CardHeader title="Model Performance" subheader="All leagues">
+            </CardHeader>
+            <CardContent>
               <ReactECharts option={allLeagues} />
             </CardContent>
-
           </Card>
         </Grid>
       </Grid>
 
-    </React.Fragment>
+    </React.Fragment >
 
   )
 }
@@ -159,6 +174,20 @@ export async function getStaticProps() {
   with group_date as (select
     round(sum(gain),2) - count (*) as profit,
     date,
+    from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
+    group by date
+    )
+  
+    select *, 
+    sum(profit) over (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_profit
+    from group_date
+    order by date
+  `)
+
+  const perPrediction = await execute(`
+  with group_date as (select
+    round(sum(gain),2) - count (*) as profit,
+    date,
     prediction
     from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
     group by date,prediction
@@ -173,7 +202,8 @@ export async function getStaticProps() {
   return {
     props: {
       profits: JSON.stringify(data),
-      profitsAllLeague: JSON.stringify(allLeagues)
+      profitsAllLeague: JSON.stringify(allLeagues),
+      profitsPerPrediction: JSON.stringify(perPrediction),
     }
   }
 }
