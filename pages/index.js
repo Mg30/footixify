@@ -32,8 +32,8 @@ export default function Home({ profitsAllLeague }) {
         },
         itemStyle: {
           color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-            { offset: 0, color: 'green' }, // Start of gradient
-            { offset: 1, color: 'orange' } // End of gradient
+            { offset: 0, color: 'violet' }, // Start of gradient
+            { offset: 1, color: 'blue' } // End of gradient
           ])
         },
       },
