@@ -9,6 +9,7 @@ import { Button, Box } from '@mui/material';
 import LocalCafeIcon from '@material-ui/icons/LocalCafe';
 
 export default function MyNavbar() {
+    const router = useRouter()
     // Custom style for the Buy Me a Coffee button and text
     const supportStyle = {
         display: 'flex', // Aligns the icon and text horizontally
