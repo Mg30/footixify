@@ -2,9 +2,11 @@ import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import { duckdbFactory } from '../database/duckdb'
 import useMediaQuery from '@mui/material/useMediaQuery';
-
+import Layout from '../components/layout'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'; // For the "winnings" icon
 import { Box, Tooltip, Typography } from '@mui/material';
+
+
 function Results({ results }) {
     const isSmallScreen = useMediaQuery('(max-width:600px)');
 
@@ -83,20 +85,20 @@ function Results({ results }) {
     });
 
     return (
-        <React.Fragment>
-            <div style={{ width: '100%' }}>
-                <Typography variant={isSmallScreen ? 'h6' : 'h4'} style={{ margin: '20px 0', textAlign: 'center' }}>
-                    Prediction History
-                </Typography>
-                <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSize={isSmallScreen ? 8 : 10}
-                    autoHeight
-                />
-            </div>
+        <Layout>
+            <Typography variant={isSmallScreen ? 'h6' : 'h4'} style={{ margin: '20px 0', textAlign: 'center' }}>
+                Prediction History
+            </Typography>
+            <DataGrid
+                rows={rows}
+                columns={columns}
+                pageSize={isSmallScreen ? 10 : 15}
+                autoHeight
+                autoPageSize
+            />
 
-        </React.Fragment>
+
+        </Layout>
     );
 }
 

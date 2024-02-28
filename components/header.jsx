@@ -9,7 +9,10 @@ import { Box, Tooltip } from '@mui/material';
 import LocalCafeIcon from '@material-ui/icons/LocalCafe';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer'; // Icon for predictions
 import HistoryIcon from '@mui/icons-material/History'; // Icon for history
-export default function MyNavbar() {
+
+
+
+const Header = () => {
     const router = useRouter()
     // Custom style for the Buy Me a Coffee button and text container
     const supportStyle = {
@@ -37,46 +40,42 @@ export default function MyNavbar() {
             display: 'inline', // Show text on larger screens
         },
     };
+    return (<AppBar position="static">
+        <Toolbar>
+            <IconButton
+                size="large"
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                onClick={() => router.push('/')}
+            >
+                <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                FooTixiFy
+            </Typography>
 
+            <Box component="a" sx={supportStyle} href="https://www.buymeacoffee.com/matgonzalep" target="_blank">
+                <LocalCafeIcon />
+                <Typography variant="body2" sx={textStyle}>
+                    Support FooTixiFy
+                </Typography>
+            </Box>
 
-    return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static">
-                <Toolbar>
-                    <IconButton
-                        size="large"
-                        edge="start"
-                        color="inherit"
-                        aria-label="menu"
-                        onClick={() => router.push('/')}
-                    >
-                        <MenuIcon />
-                    </IconButton>
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        FooTixiFy
-                    </Typography>
+            {/* Icons with Tooltips for all screen sizes */}
+            <Tooltip title="Upcoming Matches Predictions">
+                <IconButton color="inherit" onClick={() => router.push('/predictions')}>
+                    <SportsSoccerIcon />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Predictions History">
+                <IconButton color="inherit" onClick={() => router.push('/results')}>
+                    <HistoryIcon />
+                </IconButton>
+            </Tooltip>
 
-                    <Box component="a" sx={supportStyle} href="https://www.buymeacoffee.com/matgonzalep" target="_blank">
-                        <LocalCafeIcon />
-                        <Typography variant="body2" sx={textStyle}>
-                            Support FooTixiFy
-                        </Typography>
-                    </Box>
-
-                    {/* Icons with Tooltips for all screen sizes */}
-                    <Tooltip title="Upcoming Matches Predictions">
-                        <IconButton color="inherit" onClick={() => router.push('/predictions')}>
-                            <SportsSoccerIcon />
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Predictions History">
-                        <IconButton color="inherit" onClick={() => router.push('/results')}>
-                            <HistoryIcon />
-                        </IconButton>
-                    </Tooltip>
-
-                </Toolbar>
-            </AppBar>
-        </Box>
-    );
+        </Toolbar>
+    </AppBar>)
 }
+
+export default Header

@@ -1,11 +1,14 @@
 
-import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
+import { DataGrid } from '@mui/x-data-grid';
 
 import { duckdbFactory } from '../database/duckdb'
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Typography, Tooltip } from '@mui/material';
+import Layout from '../components/layout'
+
+
 function Predictions({ predictions }) {
     const isSmallScreen = useMediaQuery('(max-width:600px)');
 
@@ -96,17 +99,18 @@ function Predictions({ predictions }) {
     });
 
     return (
-        <div style={{ width: '100%', height: '100%' }}>
+        <Layout>
             <Typography variant={isSmallScreen ? 'h6' : 'h4'} style={{ margin: '20px 0', textAlign: 'center' }}>
                 Prediction for Upcoming Matches
             </Typography>
             <DataGrid
                 rows={rows}
                 columns={columns}
-                pageSize={isSmallScreen ? 8 : 10}
+                pageSize={isSmallScreen ? 10 : 20}
                 autoHeight
             />
-        </div>
+
+        </Layout>
     );
 }
 

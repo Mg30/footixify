@@ -2,8 +2,9 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import NavBar from '../components/navbar/my-navbar'
-import Footer from '../components/footers/my-footer'
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import darkTheme from './theme';
 
 import Head from 'next/head'
 export default function App({ Component, pageProps }) {
@@ -32,9 +33,11 @@ export default function App({ Component, pageProps }) {
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" />
 
       </Head>
-      <NavBar />
-      <Component {...pageProps} />
-      <Footer />
+      <ThemeProvider theme={darkTheme}>
+        <CssBaseline />
+        <Component {...pageProps} />
+      </ThemeProvider>
+
     </>
   )
 }

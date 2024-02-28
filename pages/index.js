@@ -1,174 +1,62 @@
-import React, { useState } from 'react';
+import React from 'react';
 import ReactECharts from 'echarts-for-react';
-import { Grid, CardHeader, Card, CardContent, Typography, Select, MenuItem } from '@mui/material';
+
 import { duckdbFactory } from '../database/duckdb'
+import Layout from '../components/layout'
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import * as echarts from 'echarts';
+import CardHeader from '@mui/material/CardHeader';
+export default function Home({ profitsAllLeague }) {
+  const dataAllLeagues = JSON.parse(profitsAllLeague);
 
-export default function Home({ profits, profitsAllLeague, profitsPerPrediction }) {
-  const data = JSON.parse(profits)
-  const dataAllLeagues = JSON.parse(profitsAllLeague)
-  const dataPerPrediction = JSON.parse(profitsPerPrediction)
-  const leagues = data.map(v => v.league)
-  const uniqueLeague = Array.from(new Set(leagues))
-  const [selectedLeague, setSelectedLeague] = useState('premier-league');
-  const [selectedPrediction, setSelectedPrediction] = useState('aw');
-
-  const options = {
-
-    xAxis: {
-      type: 'category'
-    },
-    yAxis: {},
-    series: [
-      {
-        name: 'cumulative profit',
-        type: 'line',
-        encode: {
-          x: "date",
-          y: "cumulative_profit"
-        }
-
-      },
-      {
-        name: 'profit',
-        type: 'bar',
-        encode: {
-          x: "date",
-          y: "profit"
-        }
-
-      },
-    ],
-    visualMap: [
-      {
-        show: false,
-        min: 0,
-        max: 1,
-        seriesIndex: 1,
-        dimension: 0,
-        inRange: {
-          color: ['red', 'green']
-        },
-      },
-      {
-        show: false,
-        min: 0,
-        max: 1,
-        seriesIndex: 0,
-        inRange: {
-          color: ['red', 'green']
-        },
-      },
-    ],
+  const allLeaguesOptions = {
     tooltip: {
       trigger: 'axis',
     },
+    xAxis: {
+      type: 'time',
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        name: 'Cumulative Profit',
+        type: 'line',
+        data: dataAllLeagues.map(item => [item.date, item.cumulative_profit]),
+        // Ensure your data is mapped correctly; `item.date` should be a time value (timestamp or date string)
+        areaStyle: {},
+        emphasis: {
+          focus: 'series',
+        },
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'green' }, // Start of gradient
+            { offset: 1, color: 'orange' } // End of gradient
+          ])
+        },
+      },
+    ],
   };
-
-
-  const filteredData = selectedLeague === '' ? data : data.filter(v => v.league === selectedLeague);
-
-  const filteredPrediction = selectedPrediction === '' ? dataPerPrediction : dataPerPrediction.filter(v => v.prediction === selectedPrediction);
-
-
-  const perLeagues = {
-    dataset: {
-      source: filteredData
-    },
-    ...options
-  }
-
-  const perPrediction = {
-    dataset: {
-      source: filteredPrediction
-    },
-    ...options
-  }
-  const allLeagues = {
-    dataset: {
-      source: dataAllLeagues
-    },
-    ...options
-  }
-
   return (
-    <React.Fragment>
-      <Grid container direction="column" spacing={3}>
-        <Grid item>
-          <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance:" subheader={`For : ${selectedLeague}`}>
-            </CardHeader>
-            <CardContent>
-              <Select
-                value={selectedLeague}
-                onChange={(e) => setSelectedLeague(e.target.value)}
-                displayEmpty
-                fullWidth
-              >
-                {uniqueLeague.map((league, idx) => (
-                  <MenuItem key={idx} value={league}>
-                    {league}
-                  </MenuItem>
-                ))}
-              </Select>
-              <ReactECharts option={perLeagues} />
-            </CardContent>
-            <Typography></Typography>
+    <Layout>
+      <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        <CardHeader title="Cumulative Profit Across All Leagues" subheader="1$ per bet" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }} /> {/* Card Header with title */}
+        <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+          <ReactECharts
+            option={allLeaguesOptions}
+            style={{ height: 500, width: '100%' }} // Make sure ReactECharts takes the full height and width
+          />
+        </CardContent>
+      </Card>
+    </Layout>
 
-          </Card>
-        </Grid>
-        <Grid item>
-          <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance" subheader={`${selectedPrediction}`}>
-            </CardHeader>
-            <CardContent>
-              <Select
-                value={selectedPrediction}
-                onChange={(e) => setSelectedPrediction(e.target.value)}
-                displayEmpty
-                fullWidth
-              >
-                {['hw', 'd', 'aw'].map((v, idx) => (
-                  <MenuItem key={idx} value={v}>
-                    {v}
-                  </MenuItem>
-                ))}
-              </Select>
-              <ReactECharts option={perPrediction} />
-            </CardContent>
-          </Card>
-        </Grid>
-        <Grid item>
-          <Card elevation={0} sx={{ minWidth: 275 }}>
-            <CardHeader title="Model Performance" subheader="All leagues">
-            </CardHeader>
-            <CardContent>
-              <ReactECharts option={allLeagues} />
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-    </React.Fragment >
-
-  )
+  );
 }
 
 export async function getStaticProps() {
   const { execute } = await duckdbFactory()
-  const data = await execute(`
-  with group_date as (select
-  round(sum(gain),2) - count (*) as profit,
-  league,
-  date
-  from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
-  group by date, league)
-
-  select *, 
-  sum(profit) over (partition by league ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_profit
-  from group_date
-  order by date
-  `)
-
 
   const allLeagues = await execute(`
   with group_date as (select
@@ -184,26 +72,10 @@ export async function getStaticProps() {
     order by date
   `)
 
-  const perPrediction = await execute(`
-  with group_date as (select
-    round(sum(gain),2) - count (*) as profit,
-    date,
-    prediction
-    from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
-    group by date,prediction
-    )
-  
-    select *, 
-    sum(profit) over (partition by prediction ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_profit
-    from group_date
-    order by date
-  `)
 
   return {
     props: {
-      profits: JSON.stringify(data),
       profitsAllLeague: JSON.stringify(allLeagues),
-      profitsPerPrediction: JSON.stringify(perPrediction),
     }
   }
 }
