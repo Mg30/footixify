@@ -19,12 +19,70 @@ const darkTheme = createTheme({
         },
     },
     typography: {
-        // Customize typography settings as needed
+        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif', // Default Material UI font family
+        h1: {
+            fontSize: '2.5rem',
+            fontWeight: 500,
+            color: '#ffffff',
+        },
+        h2: {
+            fontSize: '2rem',
+            fontWeight: 500,
+            color: '#ccd6f6',
+        },
+        h3: {
+            fontSize: '1.75rem',
+            fontWeight: 500,
+            color: '#ccd6f6',
+        },
+        h4: {
+            fontSize: '1.5rem',
+            fontWeight: 500,
+            color: '#ccd6f6',
+        },
+        h5: {
+            fontSize: '1.25rem',
+            fontWeight: 500,
+            color: '#8892b0',
+        },
+        h6: {
+            fontSize: '1rem',
+            fontWeight: 500,
+            color: '#8892b0',
+        },
+        subtitle1: {
+            fontSize: '0.875rem',
+            fontWeight: 400,
+            color: '#ccd6f6',
+        },
+        body1: {
+            fontSize: '1rem',
+            fontWeight: 400,
+            color: '#ccd6f6',
+        },
+        body2: {
+            fontSize: '0.875rem',
+            fontWeight: 400,
+            color: '#ccd6f6',
+        },
+        button: {
+            textTransform: 'none', // To keep the button text in normal case
+            fontWeight: 500,
+            color: '#ffffff',
+        },
+        caption: {
+            fontSize: '0.75rem',
+            fontWeight: 400,
+            color: '#8892b0',
+        },
+        overline: {
+            fontSize: '0.625rem',
+            fontWeight: 400,
+            color: '#8892b0',
+            textTransform: 'uppercase',
+        },
     },
-    typography: {
-        // You can customize your typography here
-    },
-    // You can add more customization for components here
+    // Additional theme customization can go here
 });
 
 export default darkTheme;
