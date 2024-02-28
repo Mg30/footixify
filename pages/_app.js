@@ -4,7 +4,7 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import darkTheme from './theme';
+import darkTheme from '../themes/darkBlue';
 
 import Head from 'next/head'
 export default function App({ Component, pageProps }) {
