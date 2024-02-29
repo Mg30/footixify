@@ -5,8 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Box, Tooltip } from '@mui/material';
-import LocalCafeIcon from '@material-ui/icons/LocalCafe';
+import { Button, Tooltip } from '@mui/material';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer'; // Icon for predictions
 import HistoryIcon from '@mui/icons-material/History';
 
@@ -32,16 +31,31 @@ export default function Navbar() {
                 </Typography>
 
                 {/* Icons with Tooltips for all screen sizes */}
-                <Tooltip title="Upcoming Matches Predictions">
-                    <IconButton color="inherit" onClick={() => router.push('/predictions')}>
-                        <SportsSoccerIcon />
-                    </IconButton>
-                </Tooltip>
-                <Tooltip title="Predictions History">
-                    <IconButton color="inherit" onClick={() => router.push('/results')}>
-                        <HistoryIcon />
-                    </IconButton>
-                </Tooltip>
+                <Button
+                    startIcon={<SportsSoccerIcon />}
+                    color="inherit"
+                    onClick={() => router.push('/predictions')}
+                    sx={{
+                        color: '#fff', // Adjust color to fit your theme if necessary
+                        textTransform: 'none', // Keeps the button text in its original case
+                        fontWeight: 'bold', // Makes the text bold
+                    }}
+                >
+                    Predictions
+                </Button>
+                <Button
+                    startIcon={<HistoryIcon />}
+                    color="inherit"
+                    onClick={() => router.push('/results')}
+                    sx={{
+                        color: '#fff', // Adjust color to fit your theme if necessary
+                        textTransform: 'none', // Keeps the button text in its original case
+                        fontWeight: 'bold', // Makes the text bold
+                    }}
+                >
+                    History
+                </Button>
+
             </Toolbar>
         </AppBar>
     )
