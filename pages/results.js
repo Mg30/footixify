@@ -87,7 +87,7 @@ function Results({ results }) {
     return (
         <Layout>
             <Typography variant={isSmallScreen ? 'h6' : 'h4'} style={{ margin: '20px 0', textAlign: 'center' }}>
-                Prediction History
+                Predictions History
             </Typography>
             <DataGrid
                 rows={rows}

@@ -34,7 +34,8 @@ function Predictions({ predictions }) {
             headerName: "Match",
             sortable: false,
             flex: 3,
-            valueGetter: (params) => `${params.row.home_team} vs ${params.row.away_team}`,
+            valueGetter: (params) => `${params.row.home_team} vs 
+            \n${params.row.away_team}`,
         }] : [
             {
                 field: "home_team",
@@ -64,9 +65,9 @@ function Predictions({ predictions }) {
             renderCell: (params) => {
                 // Mapping prediction codes to readable format
                 const predictionMapping = {
-                    hw: "Home Win",
-                    d: "Draw",
-                    aw: "Away Win",
+                    hw: "HW",
+                    d: "D",
+                    aw: "AW",
                 };
 
                 // Function to determine color based on probability
@@ -82,7 +83,7 @@ function Predictions({ predictions }) {
                 const probabilityFormatted = `${pourcentage.toFixed(2)}%`;
 
                 return (
-                    <Tooltip title={`Probability: ${params.row.outcome_probability}, Value Bet: ${params.row.is_value ? 'Yes' : 'No'}`}>
+                    <Tooltip title={`Value Bet: ${params.row.is_value ? 'Yes' : 'No'}`}>
                         <span style={{ color: getColorFromProbability(params.row.outcome_probability) }}>
                             {predictionMapping[params.value]} - {probabilityFormatted}
                         </span>
@@ -101,7 +102,7 @@ function Predictions({ predictions }) {
     return (
         <Layout>
             <Typography variant={isSmallScreen ? 'h6' : 'h4'} style={{ margin: '20px 0', textAlign: 'center' }}>
-                Prediction for Upcoming Matches
+                Predictions for Upcoming Matches
             </Typography>
             <DataGrid
                 rows={rows}
