@@ -19,6 +19,7 @@
     "@mui/system": "^5.15.11",
     "@mui/x-data-grid": "^5.17.18",
     "@next/font": "13.1.1",
+    "@vercel/analytics": "^1.2.2",
     "duckdb": "^0.8.1",
     "echarts": "^5.4.1",
     "echarts-for-react": "^3.0.2",

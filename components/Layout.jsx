@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import Footer from './Footer'
 import NavBar from './Navbar'
 import AgeDisclaimerModal from './AgeDisclaimer';
+import { Analytics } from "@vercel/analytics/react"
 
 const Layout = ({ children }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -32,6 +33,7 @@ const Layout = ({ children }) => {
 
     return (
         <div>
+            <Analytics />
             {!isAgeConfirmed && (
                 <AgeDisclaimerModal isOpen={isModalOpen} handleConfirm={handleConfirm} />
             )}
