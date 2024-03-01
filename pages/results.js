@@ -2,7 +2,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import React from 'react';
 import { duckdbFactory } from '../database/duckdb'
 import useMediaQuery from '@mui/material/useMediaQuery';
-import Layout from '../components/layout'
+import Layout from '../components/Layout'
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'; // For the "winnings" icon
 import { Box, Tooltip, Typography } from '@mui/material';
 
