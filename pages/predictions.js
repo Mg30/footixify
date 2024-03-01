@@ -130,6 +130,7 @@ export async function getStaticProps() {
     where date >= current_date()
     order by date ASC;
     `)
+    BigInt.prototype.toJSON = function () { return this.toString() }
     return {
         props: {
             predictions: JSON.stringify(data),
