@@ -1,54 +1,63 @@
 import React from 'react';
-import { Container, Box, Typography } from '@mui/material';
-import LocalCafeIcon from '@material-ui/icons/LocalCafe';
+import { Box, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
+import LocalCafeIcon from '@mui/icons-material/LocalCafe'; // Assuming you are using
+import WarningAmberIcon from '@mui/icons-material/WarningAmber'; // Importing a warning icon as an example
+function Footer() {
 
-const Footer = () => {
+    const theme = useTheme();
+    const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+
+    // Styles
     const supportStyle = {
-        display: 'flex', // Aligns the icon and text horizontally
-        alignItems: 'center', // Centers them vertically
-        flexWrap: 'wrap', // Allows the content to wrap on smaller screens
-        color: '#FFD700', // Gold color for the icon and text
-        backgroundColor: '#ffffff', // White background to make it pop
-        padding: '5px 10px', // Adds some padding around the content
-        borderRadius: '20px', // Rounded corners for the background
-        textDecoration: 'none', // Removes underline from the text
-        '&:hover': {
-            backgroundColor: '#FFD700', // Gold background on hover
-            color: '#000000', // Change icon and text color on hover for contrast
-        },
-        margin: '0 10px', // Adds some space around the button and text
-        maxWidth: 'fit-content', // Ensures the box fits its content
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        textDecoration: 'none',
+        // Add additional styling as needed
     };
 
-    // Adjust text size based on screen size for better responsiveness
     const textStyle = {
-        marginLeft: '5px', // Adds space between the icon and the text
-        '@media (min-width:600px)': {
-            display: 'inline', // Show text on larger screens
-        },
+        ml: 1, // Add left margin to space out the icon from the text
+        // Add additional text styling as needed
     };
+
     return (
         <Box component="footer" sx={{ bgcolor: 'background.paper', py: 6 }}>
             <Container maxWidth="lg">
                 <Box
                     sx={{
                         display: 'flex',
-                        flexDirection: 'column', // Stack items vertically
-                        alignItems: 'center', // Center items horizontally for all screen sizes
-                        textAlign: 'center', // Ensure text is centered within its container
+                        flexDirection: isSmallScreen ? 'column' : 'row', // Stack items vertically on small screens, side by side on larger
+                        alignItems: 'center', // Center items horizontally
+                        justifyContent: 'center', // Center the items in the container
+                        textAlign: 'center', // Ensure text is centered
+                        gap: 2, // Add gap between items
                     }}
                 >
+                    {/* Logo and under 18 disclaimer as an icon */}
+                    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        {/* Assuming you're using an icon to represent the "Under 18 not allowed" message */}
+                        <WarningAmberIcon sx={{ color: 'red', fontSize: 40 }} />
+                        <Typography variant="caption" sx={{ mt: 1, color: 'red' }}>
+                            Under 18 not allowed
+                        </Typography>
+                    </Box>
+
+                    {/* Support message */}
                     <Box component="a" sx={supportStyle} href="https://www.buymeacoffee.com/matgonzalep" target="_blank">
                         <LocalCafeIcon />
                         <Typography variant="body2" sx={textStyle}>
                             Support FooTixiFy
                         </Typography>
                     </Box>
-                    <Box
-                        sx={{
-                            mt: 2, // Add some top margin between the two items
-                        }}
-                    >
+
+                    {/* Responsible gambling message */}
+                    <Typography variant="caption" color="text.secondary">
+                        Please Gamble Responsibly. Tips do not guarantee winning bets or profits.
+                    </Typography>
+
+                    {/* Copyright */}
+                    <Box>
                         <Typography variant="caption" color="text.secondary">
                             Copyright ©2024 GonzaData
                         </Typography>
@@ -57,6 +66,6 @@ const Footer = () => {
             </Container>
         </Box>
     );
-};
+}
 
 export default Footer;

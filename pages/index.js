@@ -2,12 +2,13 @@ import React from 'react';
 import ReactECharts from 'echarts-for-react';
 
 import { duckdbFactory } from '../database/duckdb'
-import Layout from '../components/layout'
+import Layout from '../components/Layout'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import { useRouter } from 'next/router'
 import { Typography, Button, Box, Container } from '@mui/material';
+import FAQSection from '../components/Faq';
 import * as echarts from 'echarts';
 
 
@@ -99,8 +100,10 @@ export default function Home({ profitsAllLeague }) {
               </Card>
             </Box>
           </Box>
+          <FAQSection />
         </Container>
       </Box>
+
 
     </Layout>
 
