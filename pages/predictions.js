@@ -6,7 +6,7 @@ import { duckdbFactory } from '../database/duckdb'
 
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Typography, Tooltip } from '@mui/material';
-import Layout from '../components/layout'
+import Layout from '../components/Layout'
 
 
 function Predictions({ predictions }) {
