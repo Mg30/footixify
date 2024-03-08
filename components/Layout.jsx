@@ -1,8 +1,8 @@
 import React from 'react';
 import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
-import Footer from './footer'
-import NavBar from './navbar'
+import Footer from './Footer'
+import NavBar from './Navbar'
 
 const Layout = ({ children }) => {
 
