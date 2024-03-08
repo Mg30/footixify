@@ -3,7 +3,6 @@ import Container from '@mui/material/Container';
 import Box from '@mui/material/Box';
 import Footer from './Footer'
 import NavBar from './Navbar'
-import AgeDisclaimerModal from './AgeDisclaimer';
 
 const Layout = ({ children }) => {
 
