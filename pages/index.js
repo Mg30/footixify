@@ -10,11 +10,21 @@ import { useRouter } from 'next/router'
 import { Typography, Button, Box, Container } from '@mui/material';
 import FAQSection from '../components/Faq';
 import * as echarts from 'echarts';
+import Slider from 'react-slick'; // Import Slider component
 
+const settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  adaptiveHeight: true,
+};
 
-export default function Home({ profitsAllLeague }) {
+export default function Home({ profitsAllLeague, profitsUnderOver }) {
   const router = useRouter()
   const dataAllLeagues = JSON.parse(profitsAllLeague);
+  const dataUnderOver = JSON.parse(profitsUnderOver);
 
   const allLeaguesOptions = {
     tooltip: {
@@ -31,6 +41,35 @@ export default function Home({ profitsAllLeague }) {
         name: 'Cumulative Profit',
         type: 'line',
         data: dataAllLeagues.map(item => [item.date, item.cumulative_profit]),
+        // Ensure your data is mapped correctly; `item.date` should be a time value (timestamp or date string)
+        areaStyle: {},
+        emphasis: {
+          focus: 'series',
+        },
+        itemStyle: {
+          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+            { offset: 0, color: 'violet' }, // Start of gradient
+            { offset: 1, color: 'blue' } // End of gradient
+          ])
+        },
+      },
+    ],
+  };
+  const underOverOptions = {
+    tooltip: {
+      trigger: 'axis',
+    },
+    xAxis: {
+      type: 'time',
+    },
+    yAxis: {
+      type: 'value',
+    },
+    series: [
+      {
+        name: 'Cumulative Profit',
+        type: 'line',
+        data: dataUnderOver.map(item => [item.date, item.cumulative_profit]),
         // Ensure your data is mapped correctly; `item.date` should be a time value (timestamp or date string)
         areaStyle: {},
         emphasis: {
@@ -87,18 +126,33 @@ export default function Home({ profitsAllLeague }) {
             </Box>
           </Box>
           <Box mt={{ xs: 14, sm: 14 }} className="flow-root">
-            <Box className="-m-2 rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4">
-              <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+            <Slider {...settings}>
+              <Box className="-m-2 rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4">
+                <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
 
-                <CardHeader title="Model Performance" subheader="Across all leagues: Three ways only & 1$ per bet" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }} /> {/* Card Header with title */}
-                <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                  <ReactECharts
-                    option={allLeaguesOptions}
-                    style={{ height: 500, width: '100%' }} // Make sure ReactECharts takes the full height and width
-                  />
-                </CardContent>
-              </Card>
-            </Box>
+                  <CardHeader title="Model Performance" subheader="Three ways only & 1$ per bet" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }} /> {/* Card Header with title */}
+                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                    <ReactECharts
+                      option={allLeaguesOptions}
+                      style={{ height: 500, width: '100%' }} // Make sure ReactECharts takes the full height and width
+                    />
+                  </CardContent>
+                </Card>
+              </Box>
+              <Box className="-m-2 rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4">
+                <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+
+                  <CardHeader title="Model Performance" subheader="Under/Over 2.5 only & 1$ per bet" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }} /> {/* Card Header with title */}
+                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+                    <ReactECharts
+                      option={underOverOptions}
+                      style={{ height: 500, width: '100%' }} // Make sure ReactECharts takes the full height and width
+                    />
+                  </CardContent>
+                </Card>
+              </Box>
+            </Slider>
+
           </Box>
           <FAQSection />
         </Container>
@@ -127,10 +181,25 @@ export async function getStaticProps() {
     order by date
   `)
 
+  const underOver = await execute(`
+  with group_date as (select
+    round(sum(gain),2) - count (*) as profit,
+    date,
+    from read_parquet('s3://fbref-gold/results_history_under_over_latest_version/*.parquet')
+    group by date
+    )
+  
+    select *, 
+    sum(profit) over (ORDER BY date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS cumulative_profit
+    from group_date
+    order by date
+  `)
+
 
   return {
     props: {
       profitsAllLeague: JSON.stringify(allLeagues),
+      profitsUnderOver: JSON.stringify(underOver),
     }
   }
 }
