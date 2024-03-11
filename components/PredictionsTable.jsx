@@ -1,10 +1,11 @@
 import React from 'react';
 import { DataGrid } from '@mui/x-data-grid';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Typography, Tooltip } from '@mui/material';
+import { Typography, Tooltip, IconButton } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import Link from 'next/link';
 
-
-function ThreeWayPredictionsTable({ predictions }) {
+function PredictionsTable({ predictions }) {
     const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     // Dynamically adjust columns based on screen size
@@ -53,39 +54,21 @@ function ThreeWayPredictionsTable({ predictions }) {
             hide: isSmallScreen,
         },
         {
-            field: "prediction",
-            headerName: "Prediction",
-            sortable: true,
-            flex: 2,
-            renderCell: (params) => {
-                // Mapping prediction codes to readable format
-                const predictionMapping = {
-                    hw: "HW",
-                    d: "D",
-                    aw: "AW",
-                };
-
-                // Function to determine color based on probability
-                // Adjust the ranges and colors as needed
-                const getColorFromProbability = (probability) => {
-                    if (probability < 0.45) return 'orange';
-                    return 'green'; // Simple binary color for demonstration
-                    // For a more granular color range, consider implementing a gradient or using a library
-                };
-
-                // Formatting probability to include "%" and rounding if needed
-                const pourcentage = params.row.outcome_probability * 100
-                const probabilityFormatted = `${pourcentage.toFixed(2)}%`;
-
-                return (
-                    <Tooltip title={`Value Bet: ${params.row.is_value ? 'Yes' : 'No'}`}>
-                        <span style={{ color: getColorFromProbability(params.row.outcome_probability) }}>
-                            {predictionMapping[params.value]} - {probabilityFormatted}
-                        </span>
-                    </Tooltip>
-                );
-            }
+            field: "details",
+            headerName: "Details",
+            sortable: false,
+            flex: 1,
+            renderCell: (params) => (
+                <Tooltip title="Show Details">
+                    <IconButton color="primary" component="span">
+                        <Link href={`/prediction/${params.row.key}`} passHref>
+                            <VisibilityIcon />
+                        </Link>
+                    </IconButton>
+                </Tooltip>
+            ),
         },
+
     ];
 
     const rows = JSON.parse(predictions);
@@ -109,4 +92,4 @@ function ThreeWayPredictionsTable({ predictions }) {
     );
 }
 
-export default ThreeWayPredictionsTable
+export default PredictionsTable
