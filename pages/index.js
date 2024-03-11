@@ -1,16 +1,14 @@
 import React from 'react';
-import ReactECharts from 'echarts-for-react';
 
 import { duckdbFactory } from '../database/duckdb'
 import Layout from '../components/Layout'
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
 import { useRouter } from 'next/router'
 import { Typography, Button, Box, Container } from '@mui/material';
 import FAQSection from '../components/Faq';
 import * as echarts from 'echarts';
 import Slider from 'react-slick'; // Import Slider component
+import CardChart from '../components/CardChart';
+
 
 const settings = {
   dots: true,
@@ -102,7 +100,7 @@ export default function Home({ profitsAllLeague, profitsUnderOver }) {
               lineHeight: 1.5,
               color: 'text.secondary'
             }}>
-              AI driven betting for <strong>Top European Leagues</strong> & Beyond
+              Soccer Insights with AI for <strong>Top European Leagues</strong> & Beyond
             </Typography>
             <Box mt={10} display="flex" justifyContent="center" gap={2}>
               <Button
@@ -128,28 +126,10 @@ export default function Home({ profitsAllLeague, profitsUnderOver }) {
           <Box mt={{ xs: 14, sm: 14 }} className="flow-root">
             <Slider {...settings}>
               <Box className="-m-2 rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4">
-                <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-
-                  <CardHeader title="Model Performance" subheader="Three ways only & 1$ per bet" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }} /> {/* Card Header with title */}
-                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                    <ReactECharts
-                      option={allLeaguesOptions}
-                      style={{ height: 500, width: '100%' }} // Make sure ReactECharts takes the full height and width
-                    />
-                  </CardContent>
-                </Card>
+                <CardChart chartOptions={allLeaguesOptions} title="Model performance" subHeader="Three way 1$ per bet."></CardChart>
               </Box>
               <Box className="-m-2 rounded-xl lg:-m-4 lg:rounded-2xl lg:p-4">
-                <Card sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-
-                  <CardHeader title="Model Performance" subheader="Under/Over 2.5 only & 1$ per bet" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }} /> {/* Card Header with title */}
-                  <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-                    <ReactECharts
-                      option={underOverOptions}
-                      style={{ height: 500, width: '100%' }} // Make sure ReactECharts takes the full height and width
-                    />
-                  </CardContent>
-                </Card>
+                <CardChart chartOptions={underOverOptions} title="Model performance" subHeader="Under/Over 2.5 1$ per bet."></CardChart>
               </Box>
             </Slider>
 
