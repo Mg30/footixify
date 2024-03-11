@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Container, Typography, useMediaQuery, useTheme } from '@mui/material';
 import LocalCafeIcon from '@mui/icons-material/LocalCafe'; // Assuming you are using
-import WarningAmberIcon from '@mui/icons-material/WarningAmber'; // Importing a warning icon as an example
 function Footer() {
 
     const theme = useTheme();
@@ -37,7 +36,6 @@ function Footer() {
                     {/* Logo and under 18 disclaimer as an icon */}
                     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         {/* Assuming you're using an icon to represent the "Under 18 not allowed" message */}
-                        <WarningAmberIcon sx={{ color: 'red', fontSize: 40 }} />
                         <Typography variant="caption" sx={{ mt: 1, color: 'red' }}>
                             Under 18 not allowed
                         </Typography>
@@ -53,7 +51,7 @@ function Footer() {
 
                     {/* Responsible gambling message */}
                     <Typography variant="caption" color="text.secondary">
-                        Please Gamble Responsibly. Tips do not guarantee winning bets or profits.
+                        Predictions do not guarantee winning bets or profits.
                     </Typography>
 
                     {/* Copyright */}
