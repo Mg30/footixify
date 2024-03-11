@@ -6,7 +6,7 @@ import Slider from 'react-slick'; // Import Slider component
 const SoccerPrediction = ({ match }) => {
     // Destructure match data
     const { date, league, home_team, away_team, hw_proba, d_proba, aw_proba, bookmaker, potential_gain, computed_odd, under_2_5_proba, over_2_5_proba } = match;
-    const maxProba = Math.max(aw_proba, hw_proba, aw_proba)
+    const maxProba = Math.max(aw_proba, hw_proba, d_proba)
     const mostProbableOutcome = [
         { proba: aw_proba, text: `Away win - ${aw_proba.toFixed(2) * 100} %` },
         { proba: hw_proba, text: `Home win - ${hw_proba.toFixed(2) * 100} %` },
