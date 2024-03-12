@@ -137,7 +137,18 @@ const SoccerPrediction = ({ match }) => {
             <Slider {...settings}>
                 <CardChart chartOptions={threeWayOptions} title={is_value ? "Value bet: Yes" : "Value bet: No"} subHeader={`${bookmaker}: ${potential_gain.toFixed(2)} / FooTixiFy: ${computed_odd.toFixed(2)}`}>
                 </CardChart>
-                <CardChart chartOptions={underOverOptions} title={is_under_value ? "Value bet: Yes" : "Value bet: No"} subHeader={`${bookmaker}: ${pred_under_over_2_5 === 'over_2_5' ? oddsOver.toFixed(2) : oddsUnder.toFixed(2)} / FooTixiFy: ${computed_under_odds.toFixed(2)}`}>
+                <CardChart
+                    chartOptions={underOverOptions}
+                    title={typeof is_under_value !== 'undefined' ? (is_under_value ? "Value bet: Yes" : "Value bet: No") : "Value bet: N/A"}
+                    subHeader={`${bookmaker}: ${pred_under_over_2_5 === 'over_2_5'
+                        ? oddsOver
+                            ? oddsOver.toFixed(2)
+                            : "N/A"
+                        : oddsUnder
+                            ? oddsUnder.toFixed(2)
+                            : "N/A"
+                        } / FooTixiFy: ${computed_under_odds ? computed_under_odds.toFixed(2) : "N/A"}`}
+                >
                 </CardChart>
 
             </Slider>
