@@ -5,13 +5,15 @@ import { Box, Typography } from '@mui/material';
 import Slider from 'react-slick'; // Import Slider component
 const SoccerPrediction = ({ match }) => {
     // Destructure match data
-    const { date, league, home_team, away_team, hw_proba, d_proba, aw_proba, bookmaker, potential_gain, computed_odd, under_2_5_proba, over_2_5_proba } = match;
+    const { date, league, home_team, away_team, hw_proba, d_proba, aw_proba, bookmaker, potential_gain, computed_odd, under_2_5_proba, over_2_5_proba, is_value, is_under_value, oddsOver, oddsUnder, computed_under_odds, pred_under_over_2_5 } = match;
     const maxProba = Math.max(aw_proba, hw_proba, d_proba)
+
     const mostProbableOutcome = [
         { proba: aw_proba, text: `Away win - ${aw_proba.toFixed(2) * 100} %` },
         { proba: hw_proba, text: `Home win - ${hw_proba.toFixed(2) * 100} %` },
         { proba: d_proba, text: `Draw - ${d_proba.toFixed(2) * 100} %` }
     ].find(v => v.proba.toFixed(2) === maxProba.toFixed(2))
+
     const threeWayOptions = {
         title: {
             text: mostProbableOutcome.text,
@@ -133,9 +135,9 @@ const SoccerPrediction = ({ match }) => {
                 </Typography>
             </Typography>
             <Slider {...settings}>
-                <CardChart chartOptions={threeWayOptions} title="Three way" subHeader={`${bookmaker}: ${potential_gain.toFixed(2)} / FooTixiFy: ${computed_odd.toFixed(2)}`}>
+                <CardChart chartOptions={threeWayOptions} title={is_value ? "Value bet: Yes" : "Value bet: No"} subHeader={`${bookmaker}: ${potential_gain.toFixed(2)} / FooTixiFy: ${computed_odd.toFixed(2)}`}>
                 </CardChart>
-                <CardChart chartOptions={underOverOptions} title="Under/Over 2.5">
+                <CardChart chartOptions={underOverOptions} title={is_under_value ? "Value bet: Yes" : "Value bet: No"} subHeader={`${bookmaker}: ${pred_under_over_2_5 === 'over_2_5' ? oddsOver.toFixed(2) : oddsUnder.toFixed(2)} / FooTixiFy: ${computed_under_odds.toFixed(2)}`}>
                 </CardChart>
 
             </Slider>
