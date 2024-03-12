@@ -8,42 +8,37 @@ import Link from 'next/link';
 function PredictionsTable({ predictions }) {
     const isSmallScreen = useMediaQuery('(max-width:600px)');
 
-    // Dynamically adjust columns based on screen size
     const columns = [
-        {
-            field: "date",
-            headerName: "Date",
-            sortable: true,
-            flex: isSmallScreen ? 2 : 1,
-            renderCell: (params) => {
-                // Assuming params.value is a Date object. If it's a string, you may need to parse it first
-                // Example for a Date object: const date = params.value;
-                // Example for a string: const date = new Date(params.value);
-                const date = params.value instanceof Date ? params.value : new Date(params.value);
-                // Format the date to a more readable form, e.g., "Mar 01, 2024"
-                // You can adjust the 'en-US' and the options to fit your needs
-                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            }
-        },
         ...(isSmallScreen ? [{
-            field: "match",
-            headerName: "Match",
+            field: "matchDetails",
+            headerName: "Match Details",
             sortable: false,
-            flex: 3,
-            valueGetter: (params) => `${params.row.home_team} vs 
-            \n${params.row.away_team}`,
+            flex: 6,
+            valueGetter: (params) => {
+                const formattedDate = params.row.date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+                return `${formattedDate} - ${params.row.home_team} vs ${params.row.away_team}`;
+            },
         }] : [
+            {
+                field: "date",
+                headerName: "Date",
+                sortable: true,
+                flex: 2,
+                renderCell: (params) => {
+                    return params.value.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                }
+            },
             {
                 field: "home_team",
                 headerName: "Home Team",
                 sortable: false,
-                flex: 1,
+                flex: 2,
             },
             {
                 field: "away_team",
                 headerName: "Away Team",
                 sortable: false,
-                flex: 1,
+                flex: 2,
             },
         ]),
         {
@@ -54,8 +49,33 @@ function PredictionsTable({ predictions }) {
             hide: isSmallScreen,
         },
         {
+            field: "predictionDetails",
+            headerName: "Prediction",
+            sortable: false,
+            flex: isSmallScreen ? 3 : 1,
+            renderCell: (params) => {
+                const predictionStyle = {
+                    color: params.row.is_value ? 'green' : 'orange',
+                };
+                const predictionUnderStyle = {
+                    color: params.row.is_under_value ? 'green' : 'orange', // Assuming you have a way to determine this, adjust accordingly
+                };
+                const tooltipTitle = `${((1 / params.row.computed_odd) * 100).toFixed(2)}% / ${((1 / params.row.computed_under_odds) * 100).toFixed(2)}%`;
+
+                return (
+                    <Tooltip title={tooltipTitle}>
+                        <span>
+                            <span style={predictionStyle}>{params.row.prediction.toUpperCase()}</span>
+                            {' - '}
+                            <span style={predictionUnderStyle}>{params.row.pred_under_over_2_5 === 'over_2_5' ? 'O-2.5' : 'U-2.5'}</span>
+                        </span>
+                    </Tooltip>
+                );
+            },
+        },
+        {
             field: "details",
-            headerName: "Details",
+            headerName: "",
             sortable: false,
             flex: 1,
             renderCell: (params) => (
@@ -68,13 +88,12 @@ function PredictionsTable({ predictions }) {
                 </Tooltip>
             ),
         },
-
     ];
 
     const rows = JSON.parse(predictions);
     rows.forEach(item => {
         const [day, month, year] = item.date.split('/').map(Number);
-        item.date = new Date(year, month - 1, day); // Adjusting for JavaScript's 0-based months
+        item.date = new Date(year, month - 1, day);
     });
 
     return (
