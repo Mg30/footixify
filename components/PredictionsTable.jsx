@@ -58,20 +58,35 @@ function PredictionsTable({ predictions }) {
                     color: params.row.is_value ? 'green' : 'orange',
                 };
                 const predictionUnderStyle = {
-                    color: params.row.is_under_value ? 'green' : 'orange', // Assuming you have a way to determine this, adjust accordingly
+                    color: params.row.is_under_value ? 'green' : 'orange',
                 };
-                const tooltipTitle = `${((1 / params.row.computed_odd) * 100).toFixed(2)}% / ${((1 / params.row.computed_under_odds) * 100).toFixed(2)}%`;
+
+                // Fallback for falsy computed_odd or computed_under_odds values
+                const computedOddPercentage = params.row.computed_odd ? ((1 / params.row.computed_odd) * 100).toFixed(2) : "N/A";
+                const computedUnderOddsPercentage = params.row.computed_under_odds ? ((1 / params.row.computed_under_odds) * 100).toFixed(2) : "N/A";
+                const tooltipTitle = `${computedOddPercentage}% / ${computedUnderOddsPercentage}%`;
+
+                // Fallback for falsy pred_under_over_2_5 values
+                let predUnderOverText;
+                if (params.row.pred_under_over_2_5 === 'over_2_5') {
+                    predUnderOverText = 'O-2.5';
+                } else if (params.row.pred_under_over_2_5 === 'under_2_5') {
+                    predUnderOverText = 'U-2.5';
+                } else {
+                    // Fallback text or handling for when pred_under_over_2_5 is falsy
+                    predUnderOverText = 'N/A'; // Adjust this based on your needs
+                }
 
                 return (
                     <Tooltip title={tooltipTitle}>
                         <span>
                             <span style={predictionStyle}>{params.row.prediction.toUpperCase()}</span>
                             {' - '}
-                            <span style={predictionUnderStyle}>{params.row.pred_under_over_2_5 === 'over_2_5' ? 'O-2.5' : 'U-2.5'}</span>
+                            <span style={predictionUnderStyle}>{predUnderOverText}</span>
                         </span>
                     </Tooltip>
                 );
-            },
+            }
         },
         {
             field: "details",
