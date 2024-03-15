@@ -55,10 +55,10 @@ function PredictionsTable({ predictions }) {
             flex: isSmallScreen ? 3 : 1,
             renderCell: (params) => {
                 const predictionStyle = {
-                    color: params.row.is_value ? 'green' : 'orange',
+                    color: params.row.is_value ? '#0ffd93' : '#729cbd',
                 };
                 const predictionUnderStyle = {
-                    color: params.row.is_under_value ? 'green' : 'orange',
+                    color: params.row.is_under_value ? '#0ffd93' : '#729cbd',
                 };
 
                 // Fallback for falsy computed_odd or computed_under_odds values
@@ -79,6 +79,7 @@ function PredictionsTable({ predictions }) {
 
                 return (
                     <Tooltip title={tooltipTitle}>
+
                         <span>
                             <span style={predictionStyle}>{params.row.prediction.toUpperCase()}</span>
                             {' - '}
