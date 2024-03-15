@@ -44,7 +44,7 @@ export async function getStaticProps() {
     left join  read_parquet('s3://fbref-gold/predictions_history_under_over_latest_version/*.parquet') as under
     on three.key = under.key
     WHERE three.date BETWEEN current_date AND current_date + INTERVAL '5' DAY
-    order by three.date ASC;
+    order by three.date ASC, under.time ASC;
     `)
 
     return {
