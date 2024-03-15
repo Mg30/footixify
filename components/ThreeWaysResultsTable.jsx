@@ -8,29 +8,25 @@ function ThreeWaysResultsTable({ results }) {
     const isSmallScreen = useMediaQuery('(max-width:600px)');
 
     const columns = [
-        {
-            field: "date",
-            headerName: "Date",
-            sortable: true,
-            flex: isSmallScreen ? 2 : 1,
-            renderCell: (params) => {
-                // Assuming params.value is a Date object. If it's a string, you may need to parse it first
-                // Example for a Date object: const date = params.value;
-                // Example for a string: const date = new Date(params.value);
-                const date = params.value instanceof Date ? params.value : new Date(params.value);
-                // Format the date to a more readable form, e.g., "Mar 01, 2024"
-                // You can adjust the 'en-US' and the options to fit your needs
-                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-            }
-        },
-        // Combine "home_team" and "away_team" into a single column for small screens
         ...(isSmallScreen ? [{
-            field: "match",
-            headerName: "Match",
+            field: "matchDetails",
+            headerName: "Fixture",
             sortable: false,
-            flex: 3,
-            valueGetter: (params) => `${params.row.home_team} vs ${params.row.away_team}`,
+            flex: 5,
+            valueGetter: (params) => {
+                const formattedDate = params.row.date.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+                return `${formattedDate} - ${params.row.home_team} vs ${params.row.away_team}`;
+            },
         }] : [
+            {
+                field: "date",
+                headerName: "Date",
+                sortable: true,
+                flex: 1,
+                renderCell: (params) => {
+                    return params.value.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                }
+            },
             {
                 field: "home_team",
                 headerName: "Home Team",
@@ -55,7 +51,7 @@ function ThreeWaysResultsTable({ results }) {
             field: "prediction",
             headerName: "Bet outcome",
             sortable: true,
-            flex: 2,
+            flex: isSmallScreen ? 3 : 1,
             renderCell: (params) => {
                 // Assuming you have a way to determine if the prediction matches the result in your data
                 const isCorrect = params.row.prediction === params.row.result;
@@ -64,9 +60,16 @@ function ThreeWaysResultsTable({ results }) {
 
                 return (
                     <Tooltip title={`Result: ${params.row.result}, Value Bet: ${params.row.was_value ? 'Yes' : 'No'}`}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', color: isCorrect ? 'green' : 'red' }}>
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                color: isCorrect ? '#0ffd93' : '#c07077', // Teal for wins, dark purple for losses
+                                fontWeight: isCorrect ? 'bold' : 'normal',
+                            }}
+                        >
                             <span>{params.row.prediction.toUpperCase()} - {winningsFormatted}</span>
-                            {isCorrect && <MonetizationOnIcon sx={{ marginLeft: '5px' }} />}
+                            {isCorrect && <MonetizationOnIcon sx={{ color: '#ffd700', marginLeft: '5px' }} />}
                         </Box>
                     </Tooltip>
                 );
