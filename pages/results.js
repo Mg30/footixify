@@ -41,14 +41,25 @@ function Results({ results, underOverResults }) {
 
 export async function getStaticProps() {
     const { execute } = await duckdbFactory()
-    const data = await execute(`select *,
+    const data = await execute(`
+    with source as (
+        select * from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
+        order by date DESC
+    )
+    
+    select *,
     round(gain,2) as gain,
     row_number() OVER () as id,
     strftime(date, '%d/%m/%Y') as date
-    from read_parquet('s3://fbref-gold/results_history_latest_version/*.parquet')
+    from source
     `)
 
-    const overUnderData = await execute(`select
+    const overUnderData = await execute(`
+    with source as (
+        select * from read_parquet('s3://fbref-gold/results_history_under_over_latest_version/*.parquet')
+        order by date DESC
+    )
+    select
     round(gain,2) as gain,
     key as id,
     home_team,
@@ -58,7 +69,7 @@ export async function getStaticProps() {
     is_under_over_2_5,
     gain,
     strftime(date, '%d/%m/%Y') as date
-    from read_parquet('s3://fbref-gold/results_history_under_over_latest_version/*.parquet')
+    from source
     `)
     return {
         props: {
